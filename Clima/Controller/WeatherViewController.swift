@@ -15,40 +15,40 @@ class WeatherViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var searchTextField: UITextField!
     
+    var weat = WeatherManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //searchTextField will handle the delegate (UITextFieldDelegate)
         searchTextField.delegate = self
-        
     }
     
     @IBAction func searchPressed(_ sender: UIButton) {
+        
         if searchTextField.text == "" {
-            searchTextField.placeholder = "Type a city"
+            searchTextField.placeholder = "Type a city."
         }else{
-            print(cityLabel.text = searchTextField.text)
+            cityLabel.text = searchTextField.text
+            searchTextField.endEditing(true)
+            searchTextField.text = nil
         }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        searchTextField.endEditing(true)
         print(searchTextField.text!)
+        cityLabel.text = searchTextField.text
+        searchTextField.endEditing(true)
         return true
     }
     
-    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if textField.text != ""{
-            return true
-        }else{
-            textField.placeholder = "Type a city"
-            return false
-        }
-    }
-    
+    //What to do when "Go" button is press in the keyboard
     func textFieldDidEndEditing(_ textField: UITextField) {
         
-        //Use the textfield to get the weather for that city.
-        
+        //Optional binding, metiendo el texfield en un constant para usarla en un function que necesita un String parameter
+        if let city = searchTextField.text {
+            weat.fetcWeather(cityName: city)
+        }
         searchTextField.text = ""
     }
     
